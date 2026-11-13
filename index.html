@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyRecallApp - German Active Recall Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260728" />
+  </head>
+  <body>
+    <!-- Top App Header — tabs plus settings icon only -->
+    <header id="app-header" class="app-header">
+      <nav class="nav-tabs">
+        <button id="tab-btn-training" class="nav-tab active">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+          </svg>
+          Training
+        </button>
+        <button id="tab-btn-history" class="nav-tab">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          History
+        </button>
+        <button id="tab-btn-review" class="nav-tab">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M12 3l7 4v5c0 4.5-2.7 8.2-7 10-4.3-1.8-7-5.5-7-10V7l7-4z"
+            />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
+          Review
+        </button>
+        <button id="tab-btn-raw" class="nav-tab">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M7 3h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"
+            />
+            <path d="M14 3v5h5" />
+            <path d="M9 13h6" />
+            <path d="M9 17h6" />
+          </svg>
+          Raw
+        </button>
+        <button id="tab-btn-stats" class="nav-tab">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+          Statistics
+        </button>
+      </nav>
+
+      <button
+        id="btn-open-settings"
+        class="btn-settings"
+        aria-label="Open settings"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.06A1.65 1.65 0 0 0 9 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.06a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.06A1.65 1.65 0 0 0 20.91 9H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
+    </header>
+
+    <div id="settings-backdrop" class="settings-backdrop hidden"></div>
+    <aside id="settings-panel" class="settings-panel hidden">
+      <div class="settings-panel-header">
+        <div>
+          <h2>Settings</h2>
+          <p class="settings-panel-subtitle">
+            Storage, audio, and timing controls.
+          </p>
+        </div>
+        <button
+          id="btn-close-settings"
+          class="btn-close"
+          aria-label="Close settings"
+        >
+          ×
+        </button>
+      </div>
+
+      <section class="settings-section">
+        <h3>Storage</h3>
+        <span id="storage-status-text" class="status-badge status-disconnected"
+          >Offline Local Mode</span
+        >
+        <div class="settings-button-row">
+          <button id="btn-connect-storage" class="btn btn-secondary">
+            Connect Local File
+          </button>
+          <button id="btn-connect-google-drive" class="btn btn-secondary">
+            Google Drive
+          </button>
+        </div>
+        <button id="btn-reset-progress" class="btn btn-danger btn-full">
+          Reset All Progress
+        </button>
+      </section>
+
+      <section class="settings-section">
+        <h3>Audio</h3>
+        <label for="select-audio-mode">German Audio</label>
+        <select id="select-audio-mode" class="form-control">
+          <option value="on" selected>🔊 Auto-Play ON</option>
+          <option value="off">🔇 Muted</option>
+        </select>
+      </section>
+
+      <section class="settings-section">
+        <h3>Questions</h3>
+        <label for="select-prompt-side">Prompt side</label>
+        <select id="select-prompt-side" class="form-control">
+          <option value="english" selected>English</option>
+          <option value="german">German</option>
+        </select>
+        <label for="select-recall-style">Recall style</label>
+        <select id="select-recall-style" class="form-control">
+          <option value="word" selected>Word</option>
+          <option value="sentence">Missing word in a sentence</option>
+        </select>
+        <label class="settings-checkbox-label" for="toggle-examples">
+          <input id="toggle-examples" type="checkbox" checked />
+          Show examples during preview
+        </label>
+      </section>
+    </aside>
+
+    <main class="app-container">
+      <!-- VIEW 1: SETUP -->
+      <section id="view-setup" class="view-panel">
+        <div class="setup-card">
+          <h1 class="setup-title">Vocabulary Training Setup</h1>
+          <p class="setup-subtitle">
+            Configure your German active recall flashcard session.
+          </p>
+          <div class="pointer-banner">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span id="pointer-banner-text">Loading dataset position...</span>
+          </div>
+          <div class="setup-grid">
+            <div class="form-group">
+              <label for="select-mode">Session Mode</label>
+              <select id="select-mode" class="form-control">
+                <option value="new" selected>New Words (Sequential)</option>
+                <option value="revision">Revision (Spaced Retention)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="select-level">CEFR Level</label>
+              <select id="select-level" class="form-control">
+                <option value="A1" selected>A1 — Beginner</option>
+                <option value="A2">A2 — Elementary</option>
+                <option value="B1">B1 — Intermediate</option>
+                <option value="B2">B2 — Upper Intermediate</option>
+                <option value="C1">C1 — Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="select-pos">Part of Speech</label>
+              <select id="select-pos" class="form-control">
+                <option value="noun" selected>🔵 Nouns</option>
+                <option value="verb">🟣 Verbs</option>
+                <option value="adjective">🟡 Adjectives</option>
+                <option value="adverb">🟠 Adverbs</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="input-batch-size">Batch Size (N)</label>
+              <input
+                type="number"
+                id="input-batch-size"
+                class="form-control"
+                value="15"
+                min="1"
+                max="50"
+              />
+            </div>
+            <div class="form-group">
+              <label for="input-start-index">Start Word Index</label>
+              <input
+                type="number"
+                id="input-start-index"
+                class="form-control"
+                placeholder="Leave blank to continue from progress"
+                min="0"
+              />
+            </div>
+            <div class="form-group">
+              <label for="input-preview-time">Preview Sec (S)</label>
+              <input
+                type="number"
+                id="input-preview-time"
+                class="form-control"
+                value="60"
+                min="1"
+                max="300"
+              />
+            </div>
+            <div class="form-group">
+              <label for="input-recall-time">Recall Sec (M)</label>
+              <input
+                type="number"
+                id="input-recall-time"
+                class="form-control"
+                value="180"
+                min="2"
+                max="600"
+              />
+            </div>
+          </div>
+          <button id="btn-start-session" class="btn btn-full">
+            ▶ Start Training Session
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW 2: REVIEW PRIORITIES -->
+      <section id="view-review" class="view-panel hidden">
+        <div class="summary-card">
+          <div class="review-header-row">
+            <div>
+              <h1 style="font-size: 1.6rem; font-weight: 700">
+                Review Priorities
+              </h1>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Words are grouped by how often they fail and how reliable your
+                recall is.
+              </p>
+            </div>
+            <button id="btn-start-review-session" class="btn">
+              ▶ Start Review Session
+            </button>
+          </div>
+
+          <div class="review-controls-grid">
+            <div class="form-group">
+              <label for="select-review-level">Level</label>
+              <select id="select-review-level" class="form-control">
+                <option value="A1">A1 — Beginner</option>
+                <option value="A2">A2 — Elementary</option>
+                <option value="B1">B1 — Intermediate</option>
+                <option value="B2">B2 — Upper Intermediate</option>
+                <option value="C1">C1 — Advanced</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="select-review-pos">Part of Speech</label>
+              <select id="select-review-pos" class="form-control">
+                <option value="noun">🔵 Nouns</option>
+                <option value="verb">🟣 Verbs</option>
+                <option value="adjective">🟡 Adjectives</option>
+                <option value="adverb">🟠 Adverbs</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="select-review-priority">Priority</label>
+              <select id="select-review-priority" class="form-control">
+                <option value="all">All Reviewed Words</option>
+                <option value="urgent">Priority 1 — Needs attention</option>
+                <option value="medium">Priority 2 — Needs practice</option>
+                <option value="low">Priority 3 — Stable</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="input-review-count">Number of Words</label>
+              <input
+                type="number"
+                id="input-review-count"
+                class="form-control"
+                value="10"
+                min="1"
+                max="50"
+              />
+            </div>
+          </div>
+
+          <div id="review-priority-container" class="review-grid"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: PHASE 1 — PASSIVE LEARNING -->
+      <section id="view-phase1" class="view-panel hidden">
+        <div class="flashcard-container">
+          <div class="progress-header">
+            <span id="p1-progress-text" class="progress-text"
+              >Word 1 of 10</span
+            >
+            <div class="progress-bar-outer">
+              <div id="p1-progress-bar-inner" class="progress-bar-inner"></div>
+            </div>
+            <div class="timer-widget">
+              <svg class="timer-svg" viewBox="0 0 60 60">
+                <circle
+                  class="timer-circle-bg"
+                  cx="30"
+                  cy="30"
+                  r="24"
+                  stroke-width="4"
+                  fill="none"
+                />
+                <circle
+                  id="p1-timer-circle-svg"
+                  class="timer-circle-fg"
+                  cx="30"
+                  cy="30"
+                  r="24"
+                  stroke-width="4"
+                  fill="none"
+                />
+              </svg>
+              <span id="p1-timer-text" class="timer-text-overlay">3s</span>
+            </div>
+          </div>
+          <div id="p1-card-level-pos" class="card-tag">A1 • NOUN</div>
+          <div class="word-heading-row">
+            <div id="p1-card-word" class="p1-target-word">das Buch</div>
+            <button id="btn-p1-speak" class="btn-speaker" title="Pronounce">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+              </svg>
+            </button>
+          </div>
+          <div id="p1-card-translation" class="p1-translation">the book</div>
+          <div class="example-box">
+            <div class="example-line">
+              <div id="p1-card-native-ex" class="example-native">
+                Ich lese ein Buch.
+              </div>
+              <button
+                id="btn-p1-speak-example"
+                class="btn-example-speak"
+                type="button"
+                aria-label="Pronounce German example"
+                title="Pronounce German example"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+              </button>
+            </div>
+            <div id="p1-card-english-ex" class="example-english">
+              I am reading a book.
+            </div>
+          </div>
+          <div class="p1-controls">
+            <button id="btn-p1-prev" class="btn btn-secondary">◀ Prev</button>
+            <button id="btn-p1-pause" class="btn btn-secondary">⏸ Pause</button>
+            <button id="btn-p1-mark-known" class="btn btn-secondary">
+              ✓ Mark Known
+            </button>
+            <button id="btn-p1-next" class="btn btn-secondary">Next ▶</button>
+            <button id="btn-end-session-phase1" class="btn btn-secondary">
+              ✕ End Session
+            </button>
+            <button
+              id="btn-p1-skip-recall"
+              class="btn"
+              style="margin-left: auto"
+            >
+              Jump to Recall →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: PHASE 2 — ACTIVE RECALL -->
+      <section id="view-phase2" class="view-panel hidden">
+        <div
+          class="flashcard-container"
+          style="min-height: 340px; justify-content: center"
+        >
+          <div class="progress-header">
+            <span id="p2-progress-text" class="progress-text"
+              >Recall 1 of 10</span
+            >
+            <div class="progress-bar-outer">
+              <div id="p2-progress-bar-inner" class="progress-bar-inner"></div>
+            </div>
+            <div class="timer-widget">
+              <svg class="timer-svg" viewBox="0 0 60 60">
+                <circle
+                  class="timer-circle-bg"
+                  cx="30"
+                  cy="30"
+                  r="24"
+                  stroke-width="4"
+                  fill="none"
+                />
+                <circle
+                  id="p2-timer-circle-svg"
+                  class="timer-circle-fg"
+                  cx="30"
+                  cy="30"
+                  r="24"
+                  stroke-width="4"
+                  fill="none"
+                  style="stroke: #8b5cf6"
+                />
+              </svg>
+              <span id="p2-timer-text" class="timer-text-overlay">10s</span>
+            </div>
+          </div>
+          <div id="p2-instruction" class="card-tag">Translate to German</div>
+          <div id="p2-english-prompt" class="p2-prompt-word">the book</div>
+          <div class="input-container" style="margin-top: 24px">
+            <input
+              type="text"
+              id="p2-input"
+              class="p2-input-field"
+              placeholder="Type German answer…"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button id="btn-p2-submit" class="btn">✓ Submit</button>
+            <button id="btn-p2-next" class="btn btn-secondary" hidden>
+              Next →
+            </button>
+            <button id="btn-end-session-phase2" class="btn btn-secondary">
+              ✕ End Session
+            </button>
+          </div>
+          <div id="p2-feedback-banner" class="feedback-banner hidden"></div>
+          <div id="p2-answer-details" class="p2-answer-details hidden">
+            <div class="p2-answer-row">
+              <div>
+                <div class="p2-answer-label">German</div>
+                <div id="p2-answer-german" class="p2-answer-value"></div>
+              </div>
+              <button
+                id="btn-p2-speak-example"
+                class="btn-example-speak"
+                type="button"
+                aria-label="Pronounce German example"
+                title="Pronounce German example"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                </svg>
+              </button>
+            </div>
+            <div class="p2-answer-row">
+              <div>
+                <div class="p2-answer-label">English</div>
+                <div id="p2-answer-english" class="p2-answer-value"></div>
+              </div>
+            </div>
+            <div id="p2-answer-example-de" class="p2-answer-example"></div>
+            <div id="p2-answer-example-en" class="p2-answer-example-translation"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: SESSION SUMMARY -->
+      <section id="view-summary" class="view-panel hidden">
+        <div class="summary-card">
+          <div class="summary-header">
+            <div>
+              <h1 style="font-size: 1.6rem; font-weight: 700">
+                Session Complete!
+              </h1>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Progress saved to user_progress.json.
+              </p>
+            </div>
+            <div id="summary-score-badge" class="score-badge score-high">
+              Great Job!
+            </div>
+          </div>
+          <div class="summary-metrics-grid">
+            <div class="metric-box">
+              <div id="summary-accuracy-val" class="metric-value">100%</div>
+              <div class="metric-label">Accuracy</div>
+            </div>
+            <div class="metric-box">
+              <div id="summary-avg-speed-val" class="metric-value">—</div>
+              <div class="metric-label">Avg Speed</div>
+            </div>
+            <div class="metric-box">
+              <div id="summary-total-words-val" class="metric-value">—</div>
+              <div class="metric-label">Words Trained</div>
+            </div>
+          </div>
+          <h3
+            style="
+              font-size: 1rem;
+              font-weight: 600;
+              color: var(--text-secondary);
+              margin-bottom: 12px;
+            "
+          >
+            Word Breakdown
+          </h3>
+          <div class="results-table-container">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Word</th>
+                  <th>Your Input</th>
+                  <th>Result</th>
+                  <th>Speed</th>
+                </tr>
+              </thead>
+              <tbody id="summary-table-body"></tbody>
+            </table>
+          </div>
+          <div class="summary-actions">
+            <button id="btn-summary-restart" class="btn btn-secondary">
+              ↺ Repeat
+            </button>
+            <button id="btn-summary-setup" class="btn">← Back to Setup</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: SESSION HISTORY LOG -->
+      <section id="view-history" class="view-panel hidden">
+        <div class="summary-card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 24px;
+              flex-wrap: wrap;
+              gap: 12px;
+            "
+          >
+            <div>
+              <h1 style="font-size: 1.6rem; font-weight: 700">
+                All Training Logs
+              </h1>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Grouped by same session type. Chronologically reversed.
+              </p>
+            </div>
+            <button
+              id="btn-refresh-history"
+              class="btn btn-secondary"
+              style="padding: 8px 16px"
+            >
+              ↻ Refresh
+            </button>
+          </div>
+          <div class="results-table-container">
+            <table class="results-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Level / POS</th>
+                  <th>Mode</th>
+                  <th>Words</th>
+                  <th>Accuracy</th>
+                  <th>Speed</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="history-full-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 6: RAW DATA EXPLORER -->
+      <section id="view-raw" class="view-panel hidden">
+        <div class="summary-card">
+          <div class="raw-header-row">
+            <div>
+              <h1 style="font-size: 1.6rem; font-weight: 700">
+                Raw Vocabulary View
+              </h1>
+              <p style="color: var(--text-secondary); font-size: 0.9rem">
+                Browse the full contents of a selected file from the output_data
+                folder.
+              </p>
+            </div>
+            <div class="raw-controls">
+              <div class="form-group" style="min-width: 150px">
+                <label for="select-raw-level">Level</label>
+                <select id="select-raw-level" class="form-control">
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                  <option value="B1">B1</option>
+                  <option value="B2">B2</option>
+                  <option value="C1">C1</option>
+                  <option value="C2">C2</option>
+                </select>
+              </div>
+              <div class="form-group" style="min-width: 150px">
+                <label for="select-raw-pos">Part of Speech</label>
+                <select id="select-raw-pos" class="form-control">
+                  <option value="noun">🔵 Nouns</option>
+                  <option value="verb">🟣 Verbs</option>
+                  <option value="adjective">🟡 Adjectives</option>
+                  <option value="adverb">🟠 Adverbs</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="raw-words-container" class="raw-list">
+            <div class="empty-state">Select a file to inspect its words.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 7: STATISTICS TAB -->
+      <section id="view-stats" class="view-panel hidden">
+        <!-- Rendered dynamically by renderDetailedStatsView() -->
+      </section>
+    </main>
+
+    <script type="module" src="app.js?v=20260728"></script>
+  </body>
+</html>
